@@ -269,10 +269,6 @@ const initializeAsildHeader = () => {
             sourceSearchInput.dispatchEvent(new Event("input", { bubbles: true }));
             sourceSearchInput.dispatchEvent(new Event("change", { bubbles: true }));
             sourceSearchInput.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "a" }));
-
-            if (typeof window.ProductSearchTop === "function") {
-                window.ProductSearchTop();
-            }
         }, 120);
     };
 
@@ -669,7 +665,16 @@ const initializeAsildHeader = () => {
 
         searchInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
-                syncSearchValueToSource();
+                e.preventDefault();
+                if (!connectSearchSource({ preserveInputValue: true }) || !sourceSearchInput) return;
+
+                sourceSearchInput.value = searchInput.value;
+                sourceSearchInput.dispatchEvent(new Event("input", { bubbles: true }));
+                sourceSearchInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+                if (typeof window.ProductSearchTop === "function") {
+                    window.ProductSearchTop();
+                }
             }
         });
     }
