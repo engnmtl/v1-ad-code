@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
         syncSearchPanelHeight();
     };
 
-    const connectSearchSource = () => {
+    const connectSearchSource = ({ preserveInputValue = false } = {}) => {
         const sourceInput = document.getElementById("txtbxArama");
         const sourceResults = document.getElementById("divAramaSonuc");
 
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sourceSearchInput = sourceInput;
         sourceSearchResults = sourceResults;
 
-        if (searchInput && searchInput.value !== sourceSearchInput.value) {
+        if (!preserveInputValue && searchInput && document.activeElement !== searchInput && searchInput.value !== sourceSearchInput.value) {
             searchInput.value = sourceSearchInput.value;
         }
 
@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const syncSearchValueToSource = () => {
         if (!searchInput) return;
-        if (!connectSearchSource() || !sourceSearchInput) return;
+        if (!connectSearchSource({ preserveInputValue: true }) || !sourceSearchInput) return;
 
         const nextValue = searchInput.value;
         window.clearTimeout(searchSyncTimeout);
