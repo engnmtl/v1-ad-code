@@ -1,5 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
+const initializeAsildHeader = () => {
+    if (window.__asildHeaderInitialized) return;
+    window.__asildHeaderInitialized = true;
+
     const header = document.getElementById("asild-header");
+    if (!header) return;
     const megaWrapper = document.getElementById("asild-mega-wrapper");
     const desktopList = document.getElementById("asild-desktop-list");
     const desktopSearchItem = document.getElementById("asild-desktop-search-item");
@@ -687,4 +691,10 @@ document.addEventListener("DOMContentLoaded", () => {
             closeMobileMenu();
         });
     }
-});
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeAsildHeader, { once: true });
+} else {
+    initializeAsildHeader();
+}
