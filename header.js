@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const header = document.getElementById("asild-header");
     const megaWrapper = document.getElementById("asild-mega-wrapper");
@@ -187,12 +186,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const title = document.createElement("h3");
         title.className = "asild-search-results-title";
-        title.textContent = "Sonuclar";
+        title.textContent = "Onerilen Baglantilar";
 
         const list = document.createElement("ul");
         list.className = "asild-search-results-list";
 
-        productLinks.slice(0, 6).forEach((productLink) => {
+        const seenNames = new Set();
+        productLinks.forEach((productLink) => {
+            if (seenNames.size >= 6) return;
+
+            const productName = productLink.querySelector(".ticimax-search-product-info-name")?.textContent?.trim() || "";
+            if (!productName || seenNames.has(productName)) return;
+            seenNames.add(productName);
+
             const listItem = document.createElement("li");
             listItem.className = "asild-search-results-item";
 
@@ -203,37 +209,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const target = productLink.getAttribute("target");
             if (target) link.target = target;
 
-            const imageSrc = productLink.querySelector("img")?.getAttribute("src") || "";
-            const productName = productLink.querySelector(".ticimax-search-product-info-name")?.textContent?.trim() || "";
-            const productPrice = productLink.querySelector(".ticimax-search-product-info-price")?.textContent?.trim() || "";
-
-            const imageWrap = document.createElement("div");
-            imageWrap.className = "asild-search-result-image";
-            if (imageSrc) {
-                const image = document.createElement("img");
-                image.src = imageSrc;
-                image.alt = productName;
-                imageWrap.appendChild(image);
-            }
-
-            const info = document.createElement("div");
-            info.className = "asild-search-result-info";
+            const icon = document.createElement("span");
+            icon.className = "asild-search-result-icon";
+            icon.innerHTML = "&rarr;";
 
             const name = document.createElement("div");
             name.className = "asild-search-result-name";
             name.textContent = productName;
 
-            const price = document.createElement("div");
-            price.className = "asild-search-result-price";
-            price.textContent = productPrice;
-
-            info.appendChild(name);
-            if (productPrice) {
-                info.appendChild(price);
-            }
-
-            link.appendChild(imageWrap);
-            link.appendChild(info);
+            link.appendChild(icon);
+            link.appendChild(name);
             listItem.appendChild(link);
             list.appendChild(listItem);
         });
